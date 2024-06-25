@@ -36,10 +36,32 @@ function StoryWriter() {
     if (response.ok && response.body) {
       // Handle streams from API
       console.log("Streaming started");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      handleStream(reader, decoder);
     } else {
       setRunStarted(false);
       setRunFinished(true);
       console.error("Failed to start streaming");
+    }
+  }
+
+  async function handleStream(
+    reader: ReadableStreamDefaultReader<Uint8Array>,
+    decoder: TextDecoder
+  ) {
+    // Manage the stream from the API...
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break; // breaks out of the infinite loop
+
+      // Explanation: The decoder is used to decode the Uint8Array into a string.
+      const chunk = decoder.decode(value, { stream: true });
+
+      // 1:30:18
     }
   }
 
