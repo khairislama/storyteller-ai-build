@@ -11,8 +11,9 @@ import {
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Frame } from "@gptscript-ai/gptscript";
+import renderEventMessage from "@/lib/renderEventMessage";
 
-const storiesPath = "/public/stories"; // 1:41:35
+const storiesPath = "/public/stories"; // 1:50
 
 function StoryWriter() {
   const [story, setStory] = useState("");
@@ -152,6 +153,14 @@ function StoryWriter() {
           )}
 
           {/* Render Events ... */}
+          <div className="space-y-5">
+            {events.map((event, index) => (
+              <div key={index}>
+                <span className="mr-5">{">>"}</span>
+                {renderEventMessage(event)}
+              </div>
+            ))}
+          </div>
 
           {runStarted && (
             <div>
