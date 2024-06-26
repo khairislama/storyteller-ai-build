@@ -10,8 +10,10 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+import { Frame } from "@gptscript-ai/gptscript";
+import renderEventMessage from "@/lib/renderEventMessage";
 
-const storiesPath = "/public/stories";
+const storiesPath = "/public/stories"; // 1:50
 
 function StoryWriter() {
   const [story, setStory] = useState("");
@@ -20,6 +22,7 @@ function StoryWriter() {
   const [runStarted, setRunStarted] = useState<boolean>(false);
   const [runFinished, setRunFinished] = useState<boolean | null>(null);
   const [currentTool, setCurrentTool] = useState("");
+  const [events, setEvents] = useState<Frame[]>([]);
 
   async function runScript() {
     setRunStarted(true);
@@ -61,7 +64,33 @@ function StoryWriter() {
       // Explanation: The decoder is used to decode the Uint8Array into a string.
       const chunk = decoder.decode(value, { stream: true });
 
-      // 1:30:18
+      // Explanation: We split the chunk into events by splitting it by the event: keyword.
+      const eventData = chunk
+        .split("\n\n")
+        .filter((line) => line.startsWith("event: "))
+        .map((line) => line.replace(/^event: /, ""));
+
+      // Explanation: We parse the JSON data and update the state accordingly.
+      eventData.forEach((data) => {
+        try {
+          const parsedData = JSON.parse(data);
+          if (parsedData.type === "callProgress") {
+            setProgress(
+              parsedData.output[parsedData.output.length - 1].content
+            );
+            setCurrentTool(parsedData.tool?.description || "");
+          } else if (parsedData.type === "callStart") {
+            setCurrentTool(parsedData.tool?.description || "");
+          } else if (parsedData.type === "runFinish") {
+            setRunFinished(true);
+            setRunStarted(false);
+          } else {
+            setEvents((prevEvent) => [...prevEvent, parsedData]);
+          }
+        } catch (error) {
+          console.error("Failed to parse JSON", error);
+        }
+      });
     }
   }
 
@@ -124,6 +153,14 @@ function StoryWriter() {
           )}
 
           {/* Render Events ... */}
+          <div className="space-y-5">
+            {events.map((event, index) => (
+              <div key={index}>
+                <span className="mr-5">{">>"}</span>
+                {renderEventMessage(event)}
+              </div>
+            ))}
+          </div>
 
           {runStarted && (
             <div>
