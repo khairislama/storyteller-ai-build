@@ -1,4 +1,5 @@
 tools: story-writer, story-illustrator, mkdir, sys.write, sys.read, sys.download, sys.abort
+model: gpt-3.5-turbo
 description: Writes a children's book and generates illustrations for it.
 args: story: The story to write and illustrate. Can be a prompt or a complete story.
 args: pages: The number of pages to generate
@@ -14,7 +15,7 @@ Do the following steps one after the other without skipping any or ending early:
 5. If the generated story is not appropriate for children, abort the process and cite the reason why.
 6. For every page of the story you got from the story-writer, do the following:
    - For the content of the page, write it to `${path}/${story-title}/page<page-number>.txt.
-   - Call story-illustrator to illustrate it. Be sure to include the character's descriptions, setting's decriptions
+   - Call story-illustrator to illustrate it. Be sure to include the character's descriptions, setting's descriptions
      and illustration style you got from the story-writer when asking story-illustrator to illustrate the page.
    - Download the illustration to a file at `${path}/${story-title}/page<page_number>.png`.
 
@@ -28,7 +29,7 @@ temperature: 1
 You are an accomplished children's story writer. You like to write with a style that is appropriate for children but
 is still interesting to read. With your style, write a story based on ${prompt} that has ${pages} pages. Along with 
 the story, write an extensive description of each character's physical appearance. Be sure to include things like hair
-color, skin tone, hair style, species, and any other signiciant characteristics. Write an extensive description of
+color, skin tone, hair style, species, and any other significant characteristics. Write an extensive description of
 what settings in the story look like as well. Finally, determine what style that illustrations of this story should
 be written in using 5 or less words. If the ${prompt} provides one, use that.
 
