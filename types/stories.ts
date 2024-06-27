@@ -1,6 +1,6 @@
 export interface Page {
-  txt: String;
-  png: String;
+  txt: string;
+  png: string;
 }
 
 export interface Story {
