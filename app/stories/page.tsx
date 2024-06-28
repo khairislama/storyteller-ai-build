@@ -4,6 +4,9 @@ import { BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+// Server side render this page
+export const revalidate = 60;
+
 function Stories() {
   const stories: Story[] = getAllStories();
   return (
