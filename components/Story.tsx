@@ -55,6 +55,7 @@ function Story({ story }: Props) {
                       {page.txt}
                     </p>
                   </CardContent>
+
                   <p className="text-center text-gray-400">
                     Page {current} of {count}
                   </p>
@@ -62,6 +63,7 @@ function Story({ story }: Props) {
               </CarouselItem>
             ))}
           </CarouselContent>
+
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
